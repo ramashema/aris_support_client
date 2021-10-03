@@ -63,12 +63,15 @@ class SupportRequestController extends Controller
                     'descriptions' => $request->input('descriptions')
                 ]);
 
-                //return redirect()->back()->with('message', 'If you provided correct registration number, you will get notified using your email address about your reported case');
+                if ($support_request != null) {
+                    return view('feedback.success')->with('success', 'If you provided correct registration number, you will get notified using your email address about your reported case');
+                } else{
+                    return view('feedback.success')->with('error', 'Something went wrong, Contact Administrator [rshemahonge@mzumbe.ac.tz]');
+                }
             }
-            dd($support_request);
 
         } else{
-            // return redirect()->back()->with('message', 'If you provided correct registration number, you will get notified using your email address about your reported case');
+            return view('feedback.success')->with('error', 'Wrong registration number');
         }
     }
 }
