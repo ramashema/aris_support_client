@@ -10,9 +10,11 @@
                     <a href="{{ route('request.homepage') }}" class="btn btn-primary" title="Go Back Home">Go Back</a>
                 @endif
 
-{{--                @if($error)--}}
-{{--                        <h3 class="text-center text-danger display-4">Error</h3>--}}
-{{--                @endif--}}
+                @if($error)
+                        <h3 class="text-center text-danger display-4">Error</h3>
+                        <p>{{ $error }}</p>
+                        <a href="{{ route('request.homepage') }}" class="btn btn-primary" title="Go Back Home">Go Back</a>
+                @endif
             </div>
         </div>
     </div>
