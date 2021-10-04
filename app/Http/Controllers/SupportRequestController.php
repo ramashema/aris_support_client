@@ -28,7 +28,7 @@ class SupportRequestController extends Controller
             'registration_number' => 'required',
             'email' => 'required|email',
             'descriptions' => 'max:256',
-            'other_descriptions' => 'max:256'
+            'others' => 'max:256'
         ]);
 
         $registration_number = $request->input('registration_number');
@@ -47,9 +47,18 @@ class SupportRequestController extends Controller
                 ]);
 
                 // insert the support to the support table
-                $support_request = $created_user->support_requests()->create([
-                    'descriptions' => $request->input('descriptions')
-                ]);
+                if ($request->input('descriptions') == "others"){
+                    $support_request = $created_user->support_requests()->create([
+                        //'descriptions' => $request->input('descriptions')
+                        'descriptions' => $request->input('descriptions')."\n[".$request->input("others")."]"
+                    ]);
+                } else {
+                    $support_request = $created_user->support_requests()->create([
+                        //'descriptions' => $request->input('descriptions')
+                        'descriptions' => $request->input('descriptions')
+                    ]);
+                }
+
 
                 if ($support_request != null) {
                     return view('feedback.success')->with('success', 'If you provided correct registration number, you will get notified using your email address about your reported case');
@@ -59,9 +68,16 @@ class SupportRequestController extends Controller
             } else{
                 // if user exists there is no need to create this user
                 // just create the support description
-                $support_request = $user->support_requests()->create([
-                    'descriptions' => $request->input('descriptions')
-                ]);
+
+                if ($request->input('descriptions') == "others"){
+                    $support_request = $user->support_requests()->create([
+                        'descriptions' => $request->input('descriptions')."\n[".$request->input("others")."]"
+                    ]);
+                } else {
+                    $support_request = $user->support_requests()->create([
+                        'descriptions' => $request->input('descriptions')
+                    ]);
+                }
 
                 if ($support_request != null) {
                     return view('feedback.success')->with('success', 'If you provided correct registration number, you will get notified using your email address about your reported case');
