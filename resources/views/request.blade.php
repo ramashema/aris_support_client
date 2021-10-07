@@ -9,7 +9,7 @@
                     @csrf
                     <div class="form-group mt-2">
                         <label for="registration_number">Registration Number</label>
-                        <input type="text" class="form-control" id="registration_number" name="registration_number" placeholder="Your Registration Number">
+                        <input type="text" class="form-control @error('registration_number') border-danger  @enderror" id="registration_number" name="registration_number" placeholder="Your Registration Number">
 
                         <div style="color: red">
                             @error('registration_number')
@@ -20,7 +20,7 @@
 
                     <div class="form-group mt-2">
                         <label for="email">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" placeholder="Your Email address">
+                        <input type="email" class="form-control @error('email') border-danger  @enderror" id="email" name="email" placeholder="Your Email address">
 
                         <div style="color: red">
                             @error('email')
@@ -31,7 +31,7 @@
 
                     <div class="form-group mt-2">
                         <label for="descriptions">Request Description</label>
-                        <select class="form-control" id="descriptions" name="descriptions" >
+                        <select class="form-control @error('descriptions') border-danger  @enderror" id="descriptions" name="descriptions" >
                             <option selected disabled>--choose the problem--</option>
                             <option value="Password Reset">Password Reset</option>
                             <option value="others">Other problems</option>
@@ -40,11 +40,11 @@
 
                     <div id="other_descriptions" class="form-group mt-2" style="display: none">
                         <label for="others">If other please describe</label>
-                        <textarea id="others" class="form-control" name="others" placeholder="Describe your problem here..."></textarea>
+                        <textarea id="others" class="form-control @error('others') border-danger  @enderror" name="others" placeholder="Describe your problem here..."></textarea>
                     </div>
 
-                    <div class="my-3">
-                        <input type="submit" class="btn btn-success" value="Request Support">
+                    <div class="mt-4">
+                        <input type="submit" class="btn btn-success btn-sm w-100" value="Please Help">
                     </div>
                 </form>
             </div>

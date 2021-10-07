@@ -32,7 +32,7 @@ class SupportRequestController extends Controller
         ]);
 
         $registration_number = $request->input('registration_number');
-        $response = Http::get('http://localhost:8000/api/student/'.$registration_number)->json();
+        $response = Http::get('http://localhost:8001/api/student/'.$registration_number)->json();
 
         if (!array_key_exists("error", $response)){
             # TODO: If the response return no error, insert data in the support database

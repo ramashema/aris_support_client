@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\SupportRequestController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,3 +24,6 @@ Route::get('/', [SupportRequestController::class, 'index'])->name('request.homep
 
 // process the request after user form submission
 Route::post('process', [SupportRequestController::class, 'process_request'])->name('request.process');
+
+// launch the login page
+Route::get('auth/login', [UserController::class, 'index'])->name('auth.login');
