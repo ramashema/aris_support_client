@@ -40,7 +40,7 @@
 
                     <div id="other_descriptions" class="form-group mt-2" style="display: none">
                         <label for="others">If other please describe</label>
-                        <textarea id="others" class="form-control @error('others') border-danger  @enderror" name="others" placeholder="Describe your problem here..."></textarea>
+                        <textarea id="others" class="form-control @error('others ') border-danger  @enderror" name="others" placeholder="Describe your problem here..."></textarea>
                     </div>
 
                     <div class="mt-4">

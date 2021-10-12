@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\SupportRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -50,7 +49,7 @@ class SupportRequestController extends Controller
                 if ($request->input('descriptions') == "others"){
                     $support_request = $created_user->support_requests()->create([
                         //'descriptions' => $request->input('descriptions')
-                        'descriptions' => $request->input('descriptions')."\n[".$request->input("others")."]"
+                        'descriptions' => $request->input("others")
                     ]);
                 } else {
                     $support_request = $created_user->support_requests()->create([
@@ -71,7 +70,7 @@ class SupportRequestController extends Controller
 
                 if ($request->input('descriptions') == "others"){
                     $support_request = $user->support_requests()->create([
-                        'descriptions' => $request->input('descriptions')."\n[".$request->input("others")."]"
+                        'descriptions' => $request->input("others")
                     ]);
                 } else {
                     $support_request = $user->support_requests()->create([
