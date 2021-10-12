@@ -9,6 +9,10 @@
                 <form action="{{ route('auth.login') }}" method="post">
                     @csrf
                     {{--Login form--}}
+                    @if(session()->has('error'))
+                        <div class="alert alert-danger text-center">{{ session('error') }}</div>
+                    @endif
+
                     <div class="form-group">
                         <label for="email">Email</label>
                         <input class="form-control @error('email') border-danger  @enderror" type="email" id="email" name="email" placeholder="e.g user@mzumbe.ac.tz" required>

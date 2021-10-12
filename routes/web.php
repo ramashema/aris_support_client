@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SupportRequestController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -27,3 +28,9 @@ Route::post('process', [SupportRequestController::class, 'process_request'])->na
 
 // launch the login page
 Route::get('auth/login', [UserController::class, 'index'])->name('auth.login');
+
+// process the login
+Route::post('auth/login', [UserController::class, 'login'])->name('auth.login');
+
+// launch the dashboard\
+Route::get('private/dashboard', [DashboardController::class, 'index'])->name('private.dashboard');

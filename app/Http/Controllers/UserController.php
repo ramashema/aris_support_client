@@ -19,5 +19,17 @@ class UserController extends Controller
     public function login (Request $request) {
         //TODO: login the user
 
+        // validdate the data
+        $this->validate($request, [
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
+
+        // login
+        if (!auth()->attempt($request->only('email', 'password'))){
+            return back()->with('error', 'Invalid username or password');
+        }
+
+        return redirect(route('private.dashboard'));
     }
 }
