@@ -32,5 +32,8 @@ Route::get('auth/login', [UserController::class, 'index'])->name('auth.login');
 // process the login
 Route::post('auth/login', [UserController::class, 'login'])->name('auth.login');
 
+// logout
+Route::post('auth/logout', [UserController::class, 'logout'])->name('auth.logout');
+
 // launch the dashboard\
 Route::get('private/dashboard', [DashboardController::class, 'index'])->name('private.dashboard');

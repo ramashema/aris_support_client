@@ -13,6 +13,10 @@
                         <div class="alert alert-danger text-center">{{ session('error') }}</div>
                     @endif
 
+                    @if(session()->has('success'))
+                        <div class="alert alert-success text-center">{{ session('success') }}</div>
+                    @endif
+
                     <div class="form-group">
                         <label for="email">Email</label>
                         <input class="form-control @error('email') border-danger  @enderror" type="email" id="email" name="email" placeholder="e.g user@mzumbe.ac.tz" required>

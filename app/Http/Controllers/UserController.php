@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    private $last_login;
+
     public function __construct(){
         $this->middleware('auth')->except('index', 'login');
     }
@@ -31,5 +35,20 @@ class UserController extends Controller
         }
 
         return redirect(route('private.dashboard'));
+    }
+
+    public function logout () {
+        //TODO: here is where user is logged out from the system
+
+        // update last login time
+
+        $user = User::find(auth()->user()->id);
+        $user->last_login = Carbon::now()->toDateTimeString();
+        $user->save();
+
+        // then logout
+        auth()->logout();
+        // redirect to the login page
+        return redirect(route('auth.login'))->with('success', 'Successfully logged out');
     }
 }

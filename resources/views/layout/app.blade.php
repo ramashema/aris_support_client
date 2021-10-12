@@ -26,7 +26,15 @@
 
                     @auth
                         <li class="nav-item active">
-                            <a class="nav-link" href="#">Logout</a>
+                            <span class="text-white mx-3">Name: {{ auth()->user()->name }}</span>
+                        </li>
+
+                        <li class="nav-item active">
+                            <form action="{{ route('auth.logout') }}" method="post">
+                                @csrf
+                                <button type="submit" class="btn btn-sm btn-danger">Logout</button>
+                            </form>
+
                         </li>
                     @endauth
 {{--                    <li class="nav-item">--}}
