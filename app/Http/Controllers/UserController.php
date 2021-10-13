@@ -49,6 +49,6 @@ class UserController extends Controller
         // then logout
         auth()->logout();
         // redirect to the login page
-        return redirect(route('auth.login'))->with('success', 'Successfully logged out');
+        return redirect(route('login'))->with('success', 'Successfully logged out');
     }
 }

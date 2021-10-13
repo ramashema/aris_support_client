@@ -27,13 +27,17 @@ Route::get('/', [SupportRequestController::class, 'index'])->name('request.homep
 Route::post('process', [SupportRequestController::class, 'process_request'])->name('request.process');
 
 // launch the login page
-Route::get('auth/login', [UserController::class, 'index'])->name('auth.login');
+Route::get('auth/login', [UserController::class, 'index'])->name('login');
 
 // process the login
-Route::post('auth/login', [UserController::class, 'login'])->name('auth.login');
+Route::post('auth/login', [UserController::class, 'login'])->name('login');
 
 // logout
 Route::post('auth/logout', [UserController::class, 'logout'])->name('auth.logout');
 
-// launch the dashboard\
+// launch the dashboard
 Route::get('private/dashboard', [DashboardController::class, 'index'])->name('private.dashboard');
+
+
+// individual request
+Route::get('private/dashboard/open_request/{support_request}', [DashboardController::class, 'open_request'])->name('private.open_request');

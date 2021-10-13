@@ -6,7 +6,7 @@
             <div class="col-4 offset-4 p-5 my-5 border bg-white rounded">
                 <h1 class="text-center display-4 mb-4 border-bottom">Login</h1>
 
-                <form action="{{ route('auth.login') }}" method="post">
+                <form action="{{ route('login') }}" method="post">
                     @csrf
                     {{--Login form--}}
                     @if(session()->has('error'))
