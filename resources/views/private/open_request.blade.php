@@ -5,6 +5,9 @@
         <div class="row my-5">
             <div class="col-6 offset-3">
                 <h1 class="display-5 my-3">Attend support request</h1>
+                <div class="my-2">
+                    <a class="badge bg-dark" href="{{ route('private.dashboard') }}">Home</a>
+                </div>
                 <table class="table table-bordered">
                     <tr>
                         <th class="bg-dark text-white">Student Name</th>
