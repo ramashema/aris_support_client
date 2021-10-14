@@ -10,60 +10,49 @@
                 @endif
             </div>
 
+        </div>
 
-            @if( $support_requests )
-                <div class="row">
-
-                    <div class="col-8 offset-2">
-
-                        <!-- The messages sections -->
-
-                        @if (session()->has('success'))
-                            <div class="alert alert-success text-center">
-                                {{ session('success') }}
-                            </div>
-                        @endif
-
-                        @if (session()->has('error'))
-                            <div class="alert alert-danger text-center">
-                                {{ session('error') }}
-                            </div>
-                        @endif
-
-                        <!-- End of the message section -->
-
-                        <table class="table table-bordered rounded">
-                            <tr class="bg-dark text-white">
-                                <th>Student Name</th>
-                                <th>Request Descriptions</th>
-                            </tr>
-
-                            @foreach($support_requests as $support_request)
-                                <tr>
-                                    <td>{{ $support_request->user->name }}</td>
-                                    <td><a href="{{ route('private.open_request', $support_request) }}"> {{ $support_request->descriptions }}</a></td>
-
-{{--                                    @if ($support_request->descriptions == "Password Reset")--}}
-{{--                                        <form action="#" method="post">--}}
-{{--                                            @csrf--}}
-{{--                                            <td><input type="submit" class="btn btn-sm btn-success" value="Reset Password"></td>--}}
-{{--                                        </form>--}}
-{{--                                    @else--}}
-{{--                                        <td><a class="btn btn-sm btn-primary" href="{{ route('private.open_request', $support_request->id) }}">Open</a></td>--}}
-{{--                                    @endif--}}
+        <div class="row">
+            <div class="col-8 offset-2">
+                @empty( $support_requests )
+                    <p class="text-muted text-center">--No un-attended requests--</p>
+                @else
 
 
-                                </tr>
+                <!-- The messages sections -->
 
-                            @endforeach
+                    @if (session()->has('success'))
+                        <div class="alert alert-success text-center">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    @if (session()->has('error'))
+                        <div class="alert alert-danger text-center">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+
+                <!-- End of the message section -->
+
+                    <table class="table table-bordered rounded">
+                        <tr class="bg-dark text-white">
+                            <th>Student Name</th>
+                            <th>Request Descriptions</th>
+                        </tr>
+
+                        @foreach($support_requests as $support_request)
                             <tr>
+                                <td>{{ $support_request->user->name }}</td>
+                                <td><a href="{{ route('private.open_request', $support_request) }}"> {{ $support_request->descriptions }}</a></td>
                             </tr>
-                        </table>
-                    </div>
-                </div>
-            @else
-                <p class="text-muted text-center">--No un-attended requests--</p>
-            @endif
+                        @endforeach
+                        <tr>
+                        </tr>
+                    </table>
+
+                @endempty
+            </div>
         </div>
     </div>
 @endsection

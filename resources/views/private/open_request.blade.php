@@ -8,6 +8,24 @@
                 <div class="my-2">
                     <a class="badge bg-dark" href="{{ route('private.dashboard') }}">Home</a>
                 </div>
+
+                <!-- The messages sections -->
+
+                @if (session()->has('success'))
+                    <div class="alert alert-success text-center">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                @if (session()->has('error'))
+                    <div class="alert alert-danger text-center">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
+            <!-- End of the message section -->
+
+
                 <table class="table table-bordered">
                     <tr>
                         <th class="bg-dark text-white">Student Name</th>
@@ -32,7 +50,14 @@
                         <button type="submit" class="btn float-end btn-sm btn-success">Reset password</button>
                     </form>
                 @else
-                    <a href="https://aris.mzumbe.ac.tz" target="_blank" class="btn float-end btn-sm btn-success">Open ARIS</a>
+                    @if (!$support_request->attended)
+                        <form action="{{ route('attend_other_support', [$support_request]) }}" method="post">
+                            @csrf
+                            <button type="submit" class="btn  btn-sm btn-success float-end">Attend</button>
+                        </form>
+                    @else
+                        <a class="btn btn-sm btn-success float-end" href="https://aris.mzumbe.ac.tz" target="_blank">Open Aris</a>
+                    @endif
                 @endif
             </div>
         </div>

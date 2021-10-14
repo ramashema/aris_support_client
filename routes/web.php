@@ -44,3 +44,6 @@ Route::get('private/dashboard/open_request/{support_request}', [DashboardControl
 
 // reset user/student password
 Route::post('auth/user/{user}/{support_request}/password_reset', [UserController::class, 'reset_student_password'])->name('user.password_reset');
+
+// open aris
+Route::post('support_request/{support_request}/open_aris/', [SupportRequestController::class, 'attend_other_support'])->name('attend_other_support');

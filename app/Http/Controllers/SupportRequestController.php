@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SupportRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\ValidationException;
 
 class SupportRequestController extends Controller
@@ -90,4 +92,13 @@ class SupportRequestController extends Controller
         }
     }
 
+    public function attend_other_support (SupportRequest  $support_request): \Illuminate\Http\RedirectResponse
+    {
+         // TODO: this open the aris and update the database to attended case
+            //updated to attended
+            $support_request->attended = true;
+            $support_request->save();
+
+            return redirect()->back()->with('success', 'You can now click open aris for further actions');
+    }
 }
