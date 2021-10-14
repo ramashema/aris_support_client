@@ -89,4 +89,5 @@ class SupportRequestController extends Controller
             return view('feedback.success')->with('error', 'Wrong registration number');
         }
     }
+
 }

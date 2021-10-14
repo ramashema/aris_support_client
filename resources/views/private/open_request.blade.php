@@ -27,7 +27,10 @@
                 </table>
 
                 @if ($support_request->descriptions == 'Password Reset')
-                    <a href="#" class="btn float-end btn-sm btn-success">Reset password</a>
+                    <form action="{{ route('user.password_reset', [$support_request->user, $support_request]) }}" method="post">
+                        @csrf
+                        <button type="submit" class="btn float-end btn-sm btn-success">Reset password</button>
+                    </form>
                 @else
                     <a href="https://aris.mzumbe.ac.tz" target="_blank" class="btn float-end btn-sm btn-success">Open ARIS</a>
                 @endif

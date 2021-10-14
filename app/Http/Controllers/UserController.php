@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SupportRequest;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class UserController extends Controller
 {
@@ -50,5 +52,23 @@ class UserController extends Controller
         auth()->logout();
         // redirect to the login page
         return redirect(route('login'))->with('success', 'Successfully logged out');
+    }
+
+    public function reset_student_password(User $user, SupportRequest $support_request)
+    {
+        //TODO: Reset student password
+
+        // reset the password through api request
+        $response = Http::get('http://localhost:8001/api/password_reset/'.$user->registration_number)->json();
+
+        if (array_key_exists('success', $response)){
+            //update the support request to attended
+            $support_request->attended = true;
+            $support_request->save();
+
+            return redirect(route('private.dashboard'))->with('success', 'Password reset completed successfully');
+        } else{
+            return redirect(route('private.dashboard'))->with('error', 'An error occurred when perform password reset, the password was not changed');
+        }
     }
 }

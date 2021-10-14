@@ -41,3 +41,6 @@ Route::get('private/dashboard', [DashboardController::class, 'index'])->name('pr
 
 // individual request
 Route::get('private/dashboard/open_request/{support_request}', [DashboardController::class, 'open_request'])->name('private.open_request');
+
+// reset user/student password
+Route::post('auth/user/{user}/{support_request}/password_reset', [UserController::class, 'reset_student_password'])->name('user.password_reset');

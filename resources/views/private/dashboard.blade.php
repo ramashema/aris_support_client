@@ -10,10 +10,28 @@
                 @endif
             </div>
 
+
             @if( $support_requests )
                 <div class="row">
 
                     <div class="col-8 offset-2">
+
+                        <!-- The messages sections -->
+
+                        @if (session()->has('success'))
+                            <div class="alert alert-success text-center">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+
+                        @if (session()->has('error'))
+                            <div class="alert alert-danger text-center">
+                                {{ session('error') }}
+                            </div>
+                        @endif
+
+                        <!-- End of the message section -->
+
                         <table class="table table-bordered rounded">
                             <tr class="bg-dark text-white">
                                 <th>Student Name</th>
