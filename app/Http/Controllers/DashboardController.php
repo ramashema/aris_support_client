@@ -13,7 +13,7 @@ class DashboardController extends Controller
 
     public function index() {
         // display all unattended support requests
-        $support_requests = SupportRequest::where('attended', '0')->get();
+        $support_requests = SupportRequest::where('attended','=','0')->get();
 
         return view('private.dashboard', compact('support_requests'));
     }
