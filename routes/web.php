@@ -35,9 +35,11 @@ Route::post('auth/login', [UserController::class, 'login'])->name('login');
 // logout
 Route::post('auth/logout', [UserController::class, 'logout'])->name('auth.logout');
 
-// launch the dashboard
-Route::get('private/dashboard', [DashboardController::class, 'index'])->name('private.dashboard');
+// launch the dashboard to see unattended requests
+Route::get('private/dashboard/unattended', [DashboardController::class, 'index'])->name('private.dashboard');
 
+// launch the dashboard to see attended requests
+Route::get('private/dashboard/attended', [DashboardController::class, 'attended'])->name('private.dashboard.attended');
 
 // individual request
 Route::get('private/dashboard/open_request/{support_request}', [DashboardController::class, 'open_request'])->name('private.open_request');

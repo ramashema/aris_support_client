@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\SupportMail;
 use App\Models\SupportRequest;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -62,10 +64,23 @@ class UserController extends Controller
         $response = Http::get('http://localhost:8001/api/password_reset/'.$user->registration_number)->json();
 
         if (array_key_exists('success', $response)){
+
             //update the support request to attended
             $support_request->attended = true;
             $support_request->save();
 
+            // send email to the user telling about successful password reset
+            $details_to_email = [
+                'title' => 'ARIS password reset request!',
+                'full_name' => $user->name,
+                'username' => $user->registration_number,
+                'password' => 'YOUR SURNAME in CAPITAL LETTERS'
+            ];
+
+
+            Mail::to($user->email)->send(new SupportMail($details_to_email));
+
+            // return to the dashboard with success message
             return redirect(route('private.dashboard'))->with('success', 'Password reset completed successfully');
         } else{
             return redirect(route('private.dashboard'))->with('error', 'An error occurred when perform password reset, the password was not changed');

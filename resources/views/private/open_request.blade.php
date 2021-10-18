@@ -4,9 +4,9 @@
     <div class="container">
         <div class="row my-5">
             <div class="col-6 offset-3">
-                <h1 class="display-5 my-3">Attend support request</h1>
+                <h1 class="display-5 my-3 pb-3 border-bottom">Attend support request</h1>
                 <div class="my-2">
-                    <a class="badge bg-dark" href="{{ route('private.dashboard') }}">Home</a>
+                    <a class="badge bg-dark" href="{{ route('private.dashboard') }}" style="text-decoration: none; color: white">Home</a>
                 </div>
 
                 <!-- The messages sections -->
@@ -41,6 +41,14 @@
                         <th class="bg-dark text-white">Requested</th>
                         <td>{{ \Carbon\Carbon::createFromTimestamp( strtotime($support_request->created_at ))->diffForHumans()}}</td>
                     </tr>
+
+                    @if($support_request->attended)
+                        <tr>
+                            <td colspan="2" class="bg-success text-white text-center">
+                                This case has already been attended
+                            </td>
+                        </tr>
+                    @endif
 
                 </table>
 
