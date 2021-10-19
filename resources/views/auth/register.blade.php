@@ -72,6 +72,7 @@
                         <select class="form-control @error('privilege') border-danger  @enderror" id="privilege" name="privilege"  >
                             <option selected disabled>--choose privilege group--</option>
                             <option value="support_team">Support team</option>
+                            <option value="admin">Administrator</option>
                             <option disabled>Student(currently not applicable)</option>
                         </select>
                     </div>
