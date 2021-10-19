@@ -20,7 +20,7 @@
                 <ul class="navbar-nav mr-auto">
                     @guest
                         <li class="nav-item active">
-                            <a class="nav-link" href="{{ route('login') }}">Login</a>
+                            <a class="nav-link" href="{{ route('auth.login') }}">Login</a>
                         </li>
                     @endguest
 
@@ -51,6 +51,7 @@
     </nav>
 
     @yield('contents')
+
 
     <script type="text/javascript" src="app_script.js"></script>
 </body>

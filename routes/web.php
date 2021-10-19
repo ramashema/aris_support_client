@@ -3,6 +3,7 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SupportRequestController;
 use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,10 +28,10 @@ Route::get('/', [SupportRequestController::class, 'index'])->name('request.homep
 Route::post('process', [SupportRequestController::class, 'process_request'])->name('request.process');
 
 // launch the login page
-Route::get('auth/login', [UserController::class, 'index'])->name('login');
+Route::get('auth/login', [UserController::class, 'index'])->name('auth.login');
 
 // process the login
-Route::post('auth/login', [UserController::class, 'login'])->name('login');
+Route::post('auth/login', [UserController::class, 'login'])->name('auth.login');
 
 // logout
 Route::post('auth/logout', [UserController::class, 'logout'])->name('auth.logout');
@@ -45,7 +46,17 @@ Route::get('private/dashboard/attended', [DashboardController::class, 'attended'
 Route::get('private/dashboard/open_request/{support_request}', [DashboardController::class, 'open_request'])->name('private.open_request');
 
 // reset user/student password
-Route::post('auth/user/{user}/{support_request}/password_reset', [UserController::class, 'reset_student_password'])->name('user.password_reset');
+Route::post('auth/user/{support_request}/password_reset', [UserController::class, 'reset_student_password'])->name('user.password_reset');
 
 // open aris
 Route::post('support_request/{support_request}/open_aris/', [SupportRequestController::class, 'attend_other_support'])->name('attend_other_support');
+
+// routes that contain necessary logic for user email verification
+Auth::routes(['verify' => true]);
+
+//Auth::routes();
+// user create password
+Route::get('auth/user/create_password', [UserController::class, 'create_user_password_page'])->name('auth.create_user_password');
+Route::post('auth/user/create_password/{user}', [UserController::class, 'create_user_password'])->name('auth.create_user_password');
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

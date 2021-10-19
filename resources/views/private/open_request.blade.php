@@ -5,26 +5,24 @@
         <div class="row my-5">
             <div class="col-6 offset-3">
                 <h1 class="display-5 my-3 pb-3 border-bottom">Attend support request</h1>
-                <div class="my-2">
-                    <a class="badge bg-dark" href="{{ route('private.dashboard') }}" style="text-decoration: none; color: white">Home</a>
-                </div>
-
                 <!-- The messages sections -->
 
-                @if (session()->has('success'))
+                @if (session('success'))
                     <div class="alert alert-success text-center">
                         {{ session('success') }}
                     </div>
                 @endif
 
-                @if (session()->has('error'))
+                @if (session('error'))
                     <div class="alert alert-danger text-center">
                         {{ session('error') }}
                     </div>
                 @endif
 
             <!-- End of the message section -->
-
+                <div class="my-2">
+                    <a class="badge bg-dark" href="{{ route('private.dashboard') }}" style="text-decoration: none; color: white">Home</a>
+                </div>
 
                 <table class="table table-bordered">
                     <tr>
@@ -53,7 +51,7 @@
                 </table>
 
                 @if ($support_request->descriptions == 'Password Reset')
-                    <form action="{{ route('user.password_reset', [$support_request->user, $support_request]) }}" method="post">
+                    <form action="{{ route('user.password_reset', [$support_request]) }}" method="post">
                         @csrf
                         <button type="submit" class="btn float-end btn-sm btn-success">Reset password</button>
                     </form>
