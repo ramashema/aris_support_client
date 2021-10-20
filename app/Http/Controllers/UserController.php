@@ -19,7 +19,7 @@ class UserController extends Controller
     private $last_login;
 
     public function __construct(){
-        $this->middleware('auth')->except('index', 'login');
+        $this->middleware('auth')->except('index', 'login', 'create_user_password_page');
     }
 
     //login page
@@ -106,7 +106,7 @@ class UserController extends Controller
 
     public function create_user_password_page(){
         // load password creation page
-        if(auth()->user()->email_verified_at != null){
+        if(auth()->user()->initial_password_isset){
             $error = 'You have already created a password, if you have forgotten your password please use reset password link on your profile!';
             return redirect(route('private.dashboard'))->with('error', $error);
         } else{
