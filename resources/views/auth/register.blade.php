@@ -6,7 +6,7 @@
             <div class="col-4 offset-4 p-5 my-5 border bg-white rounded">
                 <h1 class="text-center display-4 mb-4 border-bottom">Fill in the form</h1>
 
-                {{--    The messages sections  --}}
+                {{--    The messages sections [this is repeating code should be considered to be moved to component]  --}}
                 @if (session()->has('success'))
                     <div class="alert alert-success text-center">
                         {{ session('success') }}
@@ -18,7 +18,6 @@
                         {{ session('error') }}
                     </div>
                 @endif
-
                 {{--End of the message section--}}
 
                 <form method="POST" action="{{ route('register') }}">
@@ -27,7 +26,7 @@
                         <label for="first_name">First Name</label>
                         <input type="text" class="form-control @error('first_name') border-danger  @enderror" id="first_name" name="first_name" placeholder="First Name" value="{{ old('first_name') }}">
 
-                        <div style="color: red">
+                        <div class="text-danger">
                             @error('first_name')
                             {{ $message }}
                             @enderror
@@ -38,7 +37,7 @@
                         <label for="middle_name">Middle Name</label>
                         <input type="text" class="form-control @error('middle_name') border-danger  @enderror" id="middle_name" name="middle_name" placeholder="Middle Name" value="{{ old('middle_name') }}">
 
-                        <div style="color: red">
+                        <div class="text-danger">
                             @error('middle_name')
                             {{ $message }}
                             @enderror
@@ -49,7 +48,7 @@
                         <label for="surname">SurName</label>
                         <input type="text" class="form-control @error('surname') border-danger  @enderror" id="surname" name="surname" placeholder="Last Name" value="{{ old('surname') }}">
 
-                        <div style="color: red">
+                        <div class="text-danger">
                             @error('surname')
                             {{ $message }}
                             @enderror
@@ -60,7 +59,7 @@
                         <label for="email">Email</label>
                         <input type="email" class="form-control @error('email') border-danger  @enderror" id="email" name="email" placeholder="Your Email address" value="{{ old('email') }}">
 
-                        <div style="color: red">
+                        <div class="text-danger">
                             @error('email')
                             {{ $message }}
                             @enderror
@@ -76,7 +75,6 @@
                             <option disabled>Student(currently not applicable)</option>
                         </select>
                     </div>
-
 
                     <div class="mt-4">
                         <input type="submit" class="btn btn-success btn-sm w-100" value="Register user">

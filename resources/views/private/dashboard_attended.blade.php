@@ -7,20 +7,19 @@
                 <p class="display-4 my-3 pb-3 border-bottom">Dashboard</p>
 
                 {{--    The messages sections  --}}
-                @if (session('success'))
-                    <div class="alert alert-success text-center">
-                        {{ session('success') }}
-                    </div>
-                @endif
+                    @if (session('success'))
+                        <div class="alert alert-success text-center">
+                            {{ session('success') }}
+                        </div>
+                    @endif
 
-                @if (session('success'))
-                    <div class="alert alert-danger text-center">
-                        {{ session('error') }}
-                    </div>
-                @endif
-
-
+                    @if (session('success'))
+                        <div class="alert alert-danger text-center">
+                            {{ session('error') }}
+                        </div>
+                    @endif
                 {{--End of the message section--}}
+
                 @if( strtotime(auth()->user()->last_login ) != strtotime('0000-00-00 00:00:00') || strtotime(auth()->user()->last_login != null) )
                     <p class="badge bg-success text-white">Last Login: {{ \Carbon\Carbon::createFromTimestamp(strtotime(auth()->user()->last_login))->diffForHumans() }}</p>
                 @endif

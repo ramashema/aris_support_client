@@ -19,6 +19,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     public const HOME = '/private/dashboard/unattended';
     public const CREATE_USER_PASSWORD = 'auth/user/create_password';
+//    public const BACK
 
     /**
      * The controller namespace for the application.

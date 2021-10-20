@@ -20,7 +20,7 @@
                         <input class="form-control @error('password') border-danger  @enderror" type="password" id="password" name="password" placeholder="Your password" required>
                     </div>
 
-                    <div style="color: red">
+                    <div class="text-danger">
                         @error('password')
                         {{ $message }}
                         @enderror
@@ -31,7 +31,7 @@
                         <input class="form-control @error('password_confirmation') border-danger  @enderror" type="password" id="password_confirmation" name="password_confirmation" placeholder="Confirm password" required>
                     </div>
 
-                    <div style="color: red">
+                    <div class="text-danger">
                         @error('password_confirmation')
                         {{ $message }}
                         @enderror

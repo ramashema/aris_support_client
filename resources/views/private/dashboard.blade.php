@@ -5,17 +5,19 @@
         <div class="row">
             <div class="col-8 offset-2">
                 <p class="display-4 my-3 pb-3 border-bottom">Dashboard</p>
+
                 {{--    The messages sections  --}}
 
-                @if(session('error'))
-                    <p class="alert alert-danger text-center">{{ session('error') }}</p>
-                @endif
+                    @if(session('error'))
+                        <p class="alert alert-danger text-center">{{ session('error') }}</p>
+                    @endif
 
-                @if(session('success'))
-                    <p class="alert alert-success text-center">{{ session('success') }}</p>
-                @endif
+                    @if(session('success'))
+                        <p class="alert alert-success text-center">{{ session('success') }}</p>
+                    @endif
 
                 {{--End of the message section--}}
+
                 <div>
                     @if( strtotime(auth()->user()->last_login ) != strtotime('0000-00-00 00:00:00') || strtotime(auth()->user()->last_login != null) )
                         <p class="badge bg-success text-white">Last Login: {{ \Carbon\Carbon::createFromTimestamp(strtotime(auth()->user()->last_login))->diffForHumans() }}</p>

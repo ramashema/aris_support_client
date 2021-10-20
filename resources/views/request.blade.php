@@ -7,13 +7,13 @@
                 <h1 class="text-center display-4 mb-4 border-bottom">Fill in the form</h1>
 
                 {{--    The messages sections  --}}
-                @if (session()->has('success'))
+                @if (session('success'))
                     <div class="alert alert-success text-center">
                         {{ session('success') }}
                     </div>
                 @endif
 
-                @if (session()->has('error'))
+                @if (session('error'))
                     <div class="alert alert-danger text-center">
                         {{ session('error') }}
                     </div>
@@ -27,7 +27,7 @@
                         <label for="registration_number">Registration Number</label>
                         <input type="text" class="form-control @error('registration_number') border-danger  @enderror" id="registration_number" name="registration_number" placeholder="Your Registration Number" value="{{ old('registration_number') }}">
 
-                        <div style="color: red">
+                        <div class="text-danger">
                             @error('registration_number')
                             {{ $message }}
                             @enderror
@@ -38,7 +38,7 @@
                         <label for="email">Email</label>
                         <input type="email" class="form-control @error('email') border-danger  @enderror" id="email" name="email" placeholder="Your Email address" value="{{ old('email') }}">
 
-                        <div style="color: red">
+                        <div class="text-danger">
                             @error('email')
                             {{ $message }}
                             @enderror
@@ -52,6 +52,12 @@
                             <option value="Password Reset">Password Reset</option>
                             <option value="others">Other problems</option>
                         </select>
+
+                        <div class="text-danger">
+                            @error('descriptions')
+                            {{ $message }}
+                            @enderror
+                        </div>
                     </div>
 
                     <div id="other_descriptions" class="form-group mt-2" style="display: none">
