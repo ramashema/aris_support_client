@@ -27,7 +27,8 @@
                     <span class="badge bg-dark">Unattended Requests ({{ $support_requests->total() }})</span>
                     <span class="badge bg-light text-dark border"><a href="{{route('private.dashboard.attended')}}" style="text-decoration: none; color: black">Attended Requests</a></span>
                     @if (auth()->user()->privilege == 'admin' )
-                        <span class="badge border text-primary float-end"><a href="{{ route('register') }}" style="text-decoration: none">Register new user</a></span>
+                        <span class="badge border text-primary float-end mx-2"><a href="{{ route('auth.register') }}" style="text-decoration: none">Register new user</a></span>
+                        <span class="badge border text-primary float-end"><a href="#" style="text-decoration: none">Users</a></span>
                     @endif
                 </div>
             </div>

@@ -20,7 +20,7 @@
                 @endif
                 {{--End of the message section--}}
 
-                <form method="POST" action="{{ route('register') }}">
+                <form method="POST" action="{{ route('auth.register') }}">
                     @csrf
                     <div class="form-group mt-2">
                         <label for="first_name">First Name</label>

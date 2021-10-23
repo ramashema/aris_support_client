@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\AccountActivationMail;
 use App\Mail\SupportMail;
 use App\Models\SupportRequest;
 use App\Models\User;
@@ -13,13 +14,14 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use \Exception;
+use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
     private $last_login;
 
     public function __construct(){
-        $this->middleware('auth')->except('index', 'login', 'create_user_password_page');
+        $this->middleware('auth')->except('index', 'login');
     }
 
     //login page
@@ -28,10 +30,13 @@ class UserController extends Controller
         return view('auth.login');
     }
 
+    /**
+     * @throws ValidationException
+     */
     public function login (Request $request) {
         //TODO: login the user
 
-        // validdate the data
+        // validate the data
         $this->validate($request, [
             'email' => 'required|email',
             'password' => 'required'
@@ -42,7 +47,20 @@ class UserController extends Controller
             return back()->with('error', 'Invalid username or password');
         }
 
-        return redirect(route('private.dashboard'));
+        if (!auth()->user()->email_verified_at)
+        {
+            $user = auth()->user();
+            $user->email_verified_at = Carbon::now();
+            $user->save();
+        }
+
+        if (!auth()->user()->initial_password_isset)
+        {
+            return $this->create_user_password_page();
+
+        } else{
+            return  redirect(route('private.dashboard'));
+        }
     }
 
     public function logout () {
@@ -58,6 +76,59 @@ class UserController extends Controller
         auth()->logout();
         // redirect to the login page
         return redirect(route('auth.login'))->with('success', 'Successfully logged out');
+    }
+
+    public function user_registration()
+    {
+        return view('auth.register');
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    public function process_user_registration(Request $request){
+        //TODO: Register user of the system
+
+        # receive data and validate the data
+        $this->validate($request, [
+            'first_name' => ['required', 'string', 'max:255'],
+            'middle_name' => ['string', 'max:255'],
+            'surname' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'privilege' => ['required', 'string']
+        ]);
+
+        # create user password
+        $password = "MU_".strtoupper(str_shuffle($request->input('surname').$request->input('first_name')));
+
+        # register user to the database
+        $user = User::create([
+            'registration_number' => md5($request->input('first_name').$request->input('middle_name').$request->input('surname')),
+            'name' => strtoupper($request->input('first_name')." ".$request->input('middle_name')." ".$request->input('surname')),
+            'email' => $request->input('email'),
+            'privilege' => $request->input('privilege'),
+            'password' => Hash::make($password),
+        ]);
+
+        if($user){
+            # send an email containing user registration data
+            $user_detail = [
+                'name' => $request->input('first_name')." ".$request->input('surname'),
+                'password' => $password,
+                'privilege' => $request->input('privilege'),
+                'email' => $request->input('email')
+            ];
+
+            try{
+                Mail::to($request->input('email'))->send(new AccountActivationMail($user_detail));
+            } catch (Exception $exception){
+                return redirect()->back()->with('error', 'Failed to send account activation email to user, please consider checking network connection');
+            }
+            return redirect(route('private.dashboard'))->with('success', 'User registration successful');
+
+        } else{
+            return redirect()->back()->with('error', 'User registration failed!');
+        }
     }
 
     public function reset_student_password(SupportRequest $support_request)
@@ -116,8 +187,8 @@ class UserController extends Controller
     }
 
     public function create_user_password(Request $request, User $user){
-        // validate the inputs data
-        if ($user->hasVerifiedEmail()){
+        //TODO: force user to change password after initial login
+        if ($user->initial_password_isset){
            return redirect(route('private.dashboard'))->with('error', 'You have already created a password, if you have forgotten your password please use reset password link on your profile!');
         } else{
             $request->validate([
@@ -126,6 +197,7 @@ class UserController extends Controller
 
             // store user after validation
             $user->password = Hash::make($request->input('password'));
+            $user->initial_password_isset = true;
             $user->save();
 
             return redirect(route('private.dashboard'))->with('success', 'Password created successfully!');

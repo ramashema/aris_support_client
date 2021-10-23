@@ -33,6 +33,12 @@ Route::get('auth/login', [UserController::class, 'index'])->name('auth.login');
 // process the login
 Route::post('auth/login', [UserController::class, 'login'])->name('auth.login');
 
+// show user registration form
+Route::get('auth/register', [UserController::class, 'user_registration'])->name('auth.register');
+
+// process user registration
+Route::post('auth/register', [UserController::class, 'process_user_registration'])->name('auth.register');
+
 // logout
 Route::post('auth/logout', [UserController::class, 'logout'])->name('auth.logout');
 
@@ -51,12 +57,12 @@ Route::post('auth/user/{support_request}/password_reset', [UserController::class
 // open aris
 Route::post('support_request/{support_request}/open_aris/', [SupportRequestController::class, 'attend_other_support'])->name('attend_other_support');
 
-// routes that contain necessary logic for user email verification
-Auth::routes(['verify' => true]);
+//// routes that contain necessary logic for user email verification
+//Auth::routes(['verify' => true]);
+////Auth::routes();
 
-//Auth::routes();
 // user create password
-Route::get('auth/user/create_password', [UserController::class, 'create_user_password_page'])->name('auth.create_user_password');
+Route::get('auth/user/create_password', [UserController::class, 'create_user_password_page'])->name('auth.create_user_password_page');
 Route::post('auth/user/create_password/{user}', [UserController::class, 'create_user_password'])->name('auth.create_user_password');
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
