@@ -3,7 +3,7 @@
 @section('contents')
     <div class="container">
         <div class="row">
-            <div class="col-8 offset-2">
+            <div class="col-md-8 offset-2">
                 <p class="display-4 my-3 pb-3 border-bottom">Dashboard</p>
 
                 {{--    The messages sections  --}}
@@ -24,11 +24,11 @@
                     @endif
                 </div>
                 <div class="mb-3 pt-2 pb-2 px-1">
-                    <span class="badge bg-dark">Unattended Requests ({{ $support_requests->total() }})</span>
+                    <span class="badge bg-dark">Unattended Requests @if( $support_requests->total() ) ({{ $support_requests->total() }}) @endif</span>
                     <span class="badge bg-light text-dark border"><a href="{{route('private.dashboard.attended')}}" style="text-decoration: none; color: black">Attended Requests</a></span>
                     @if (auth()->user()->privilege == 'admin' )
                         <span class="badge border text-primary float-end mx-2"><a href="{{ route('auth.register') }}" style="text-decoration: none">Register new user</a></span>
-                        <span class="badge border text-primary float-end"><a href="#" style="text-decoration: none">Users</a></span>
+                        <span class="badge border float-end"><a href="{{ route('private.users_list') }}" style="text-decoration: none">Users</a></span>
                     @endif
                 </div>
             </div>

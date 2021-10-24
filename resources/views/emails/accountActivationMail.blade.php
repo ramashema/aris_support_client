@@ -1,6 +1,6 @@
 @component('mail::message')
 # Account Successfully created
-<h5>Hello, {{ $user_details['name'] }}!</h5>
+<h1>Hello, {{ $user_details['name'] }}!</h1>
 
 
 <p>You have been registered to ARIS as {{ $user_details['privilege'] }}, your account details are as follows:</p>

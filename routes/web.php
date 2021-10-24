@@ -65,4 +65,11 @@ Route::post('support_request/{support_request}/open_aris/', [SupportRequestContr
 Route::get('auth/user/create_password', [UserController::class, 'create_user_password_page'])->name('auth.create_user_password_page');
 Route::post('auth/user/create_password/{user}', [UserController::class, 'create_user_password'])->name('auth.create_user_password');
 
+
+// get all users
+Route::get('private/users', [UserController::class, 'all_users'])->name('private.users_list');
+
+// get individual user page
+Route::get('private/user/{user}', [UserController::class, 'show_user'])->name('private.user');
+
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

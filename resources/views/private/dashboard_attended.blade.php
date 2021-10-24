@@ -25,10 +25,10 @@
                 @endif
                 <div class="mb-3 pt-2 pb-2 px-1">
                     <span class="badge bg-light text-dark border"><a href="{{route('private.dashboard')}} " style="text-decoration: none; color: black">Unattended Requests</a></span>
-                    <span class="badge bg-dark">Attended Requests ({{ $support_requests->total() }})</span>
+                    <span class="badge bg-dark">Attended Requests @if($support_requests) ({{ $support_requests->total() }}) @endif</span>
                     @if (auth()->user()->privilege == 'admin' )
-                        <span class="badge border text-primary float-end"><a href="{{ route('auth.register') }}" style="text-decoration: none">Register new user</a></span>
-                        <span class="badge border text-primary float-end"><a href="#" style="text-decoration: none">Users</a></span>
+                        <span class="badge border text-primary float-end mx-2"><a href="{{ route('auth.register') }}" style="text-decoration: none">Register new user</a></span>
+                        <span class="badge border text-primary float-end"><a href="{{ route('private.users_list') }}" style="text-decoration: none">Users</a></span>
                     @endif
                 </div>
             </div>

@@ -142,7 +142,7 @@ class UserController extends Controller
 
         try{
 
-            $response = Http::get('http://localhost:8002/api/password_reset/'.$registration_number)->json();
+            $response = Http::get('http://localhost:8001/api/password_reset/'.$registration_number)->json();
 
             // check if password reset is success
             if (array_key_exists('success', $response)){
@@ -202,5 +202,17 @@ class UserController extends Controller
 
             return redirect(route('private.dashboard'))->with('success', 'Password created successfully!');
         }
+    }
+
+    public function all_users(){
+        // TODO: Get all users with support team privilege and show them to the page
+        $users = User::where('privilege', 'support_team')->paginate(10);
+
+        return view('private.users', compact('users'));
+    }
+
+    public function show_user(User $user){
+        // TODO: Get individual user from the database
+        return view('private.user', compact('user'));
     }
 }
