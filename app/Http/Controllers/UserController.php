@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\AccountActivationMail;
+use App\Mail\ActivationDeactivationMail;
 use App\Mail\SupportMail;
 use App\Models\SupportRequest;
 use App\Models\User;
@@ -214,5 +215,86 @@ class UserController extends Controller
     public function show_user(User $user){
         // TODO: Get individual user from the database
         return view('private.user', compact('user'));
+    }
+
+    public function delete_user(User $user){
+        //TODO: delete user from the database
+    }
+
+    public function activation_deactivation_confirmation(User $user){
+        //TODO: open confirmation page for user to confirm if they do want to deactivate or activate user
+        return view('private.activate_deactivate_confirmation')->with('user', $user);
+    }
+
+    public function activation_deactivation(User $user): \Illuminate\Http\RedirectResponse
+    {
+        //TODO: processing the activation or deactivation user depend of the user status
+
+        if ($user->initial_password_isset){
+
+            // check if user is active upon activate/deactivate button click
+            if ($user->is_active){
+                // user is active therefore you need to deactivate
+                $user->is_active = false;
+                $user->password = "";
+                $user->save();
+
+                // Send email telling user that their account has been deactivated
+                $email_details = [
+                    'title' => 'Account Deactivated',
+                    'name' => $user->name,
+                    'password' => false
+                ];
+
+                try{
+                    Mail::to($user->email)->send(new ActivationDeactivationMail($email_details));
+                } catch (Exception $exception){
+                    return redirect(route('private.user', $user))->with('error', 'User account deactivated, but failed to send notification email to the user. Consider checking network connection');
+                }
+
+                return redirect(route('private.user', $user))->with('success', 'User deactivation successful');
+            } else {
+                // user is deactivated then you need to activate
+                $user->is_active = true;
+                $user->password = strtoupper(str_shuffle($user->email));
+                $user->save();
+
+                // Send email telling user that their account has been activated
+                $email_details = [
+                    'title' => 'Account Deactivated',
+                    'name' => $user->name,
+                    'password' => $user->password
+                ];
+
+                try{
+                    Mail::to($user->email)->send(new ActivationDeactivationMail($email_details));
+                } catch (Exception $exception){
+                    return redirect(route('private.user', $user))->with('error', 'User account activated, but failed to send notification email to the user. Consider checking network connection');
+                }
+
+                return redirect(route('private.user', $user))->with('success', 'User activated successful');
+            }
+
+        } else{
+            // For user who has never logged in can only be deactivated
+            $user->is_active = false;
+            $user->password = "";
+            $user->save();
+
+            // Send email telling user that their account has been deactivated
+            $email_details = [
+                'title' => 'Account Deactivated',
+                'name' => $user->name,
+                'password' => false
+            ];
+
+            try{
+                Mail::to($user->email)->send(new ActivationDeactivationMail($email_details));
+            } catch (Exception $exception){
+                return redirect(route('private.user', $user))->with('error', 'User account deactivated, but failed to send notification email to the user. Consider checking network connection');
+            }
+
+            return redirect(route('private.user', $user))->with('success', 'User deactivation successful');
+        }
     }
 }

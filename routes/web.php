@@ -72,4 +72,10 @@ Route::get('private/users', [UserController::class, 'all_users'])->name('private
 // get individual user page
 Route::get('private/user/{user}', [UserController::class, 'show_user'])->name('private.user');
 
+// get activate deactivate confirmation page
+Route::get('private/user/{user}/activate_deactivate', [UserController::class, 'activation_deactivation_confirmation'])->name('user.activate_deactivate');
+
+// process user activation or deactivation
+Route::post('private/user/{user}/activate_deactivate', [UserController::class, 'activation_deactivation'])->name('user.activate_deactivate');
+
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
