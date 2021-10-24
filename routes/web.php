@@ -78,4 +78,8 @@ Route::get('private/user/{user}/activate_deactivate', [UserController::class, 'a
 // process user activation or deactivation
 Route::post('private/user/{user}/activate_deactivate', [UserController::class, 'activation_deactivation'])->name('user.activate_deactivate');
 
+// delete user from the system
+Route::get('private/user/{user}/delete', [UserController::class, 'user_delete_confirmation'])->name('user.delete');
+Route::post('private/user/{user}/delete', [UserController::class, 'delete_user'])->name('user.delete');
+
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

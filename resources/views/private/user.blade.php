@@ -70,7 +70,7 @@
                     </tr>
                 </table>
 
-                <span><a class="btn btn-sm btn-danger mx-2 float-end" href="#">Delete</a></span>
+                <span><a class="btn btn-sm btn-danger mx-2 float-end" href="{{ route('user.delete', $user) }}">Delete</a></span>
                 @if ($user->initial_password_isset)
                     <span><a class="btn btn-sm btn-primary float-end" href="{{route('user.activate_deactivate', $user)}}">@if($user->is_active)Deactivate @else Activate @endif</a></span>
                 @else

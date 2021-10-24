@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\AccountActivationMail;
 use App\Mail\ActivationDeactivationMail;
 use App\Mail\SupportMail;
+use App\Mail\UserDeletionNotification;
 use App\Models\SupportRequest;
 use App\Models\User;
 use Carbon\Carbon;
@@ -217,9 +218,6 @@ class UserController extends Controller
         return view('private.user', compact('user'));
     }
 
-    public function delete_user(User $user){
-        //TODO: delete user from the database
-    }
 
     public function activation_deactivation_confirmation(User $user){
         //TODO: open confirmation page for user to confirm if they do want to deactivate or activate user
@@ -295,6 +293,34 @@ class UserController extends Controller
             }
 
             return redirect(route('private.user', $user))->with('success', 'User deactivation successful');
+        }
+    }
+
+    public function user_delete_confirmation(User $user){
+        //TODO: open confirmation page for user to confirm if they really want to delete system user
+        return view('private.delete_user_confirmation')->with('user', $user);
+    }
+
+    public function delete_user(User $user){
+        //TODO: delete user from the database
+        $user_email = $user->email;
+        $user_name = $user->name;
+
+        if($user->delete()){
+            // send and email to user
+            $email_details = [
+                'title' => 'You account has been deleted',
+                'name' => $user_name
+            ];
+
+            try{
+                Mail::to($user_email)->send(new UserDeletionNotification($email_details));
+            }catch (Exception $exception){
+                return redirect(route('private.users_list'))->with('error', 'User account deleted, but failed to send notification email to the user. Consider checking network connection');
+            }
+            return redirect(route('private.users_list'))->with('success', 'User account deleted successful');
+        } else{
+            return redirect()->back()->with('error', 'Failed to delete user');
         }
     }
 }
