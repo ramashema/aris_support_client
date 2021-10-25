@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\SupportRequest;
-use Illuminate\Http\Request;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 
 class DashboardController extends Controller
 {
@@ -11,19 +13,30 @@ class DashboardController extends Controller
         $this->middleware(['auth', 'verified']);
     }
 
-    public function index() {
-        // display all unattended support requests
+    /**
+     * Display all unattended support requests
+     * @return Application|Factory|View
+     */
+    public function index():View {
         $support_requests = SupportRequest::where('attended','=','0')->paginate(10);
 
         return view('private.dashboard', compact('support_requests'));
     }
 
-    public function open_request(SupportRequest $support_request) {
-        // TODO: open individual request
+    /**
+     * Open individual request
+     * @param SupportRequest $support_request
+     * @return Application|Factory|View
+     */
+    public function open_request(SupportRequest $support_request):View {
         return view('private.open_request', compact('support_request'));
     }
 
-    public function attended () {
+    /**
+     * Load attended support requests
+     * @return Application|Factory|View
+     */
+    public function attended ():View {
         $support_requests = SupportRequest::where('attended','=','1')->paginate(10);
 
         return view('private.dashboard_attended', compact('support_requests'));

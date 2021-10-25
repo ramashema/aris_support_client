@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use App\Mail\OtherRequestsMail;
 use App\Models\SupportRequest;
 use App\Models\User;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
@@ -15,18 +19,23 @@ use Illuminate\Validation\ValidationException;
 class SupportRequestController extends Controller
 {
 
+    /**
+     * Launch the request page for user to fill the form
+     * @return Application|Factory|View
+     */
     public function index()
     {
-        // TODO: Launch the request page for user to fill the form
         return view("request");
     }
 
     /**
+     * Process the request after user submission
+     * @param Request $request
+     * @return Application|Factory|View|RedirectResponse
      * @throws ValidationException
      */
-    public function process_request(Request $request)
+    public function process_request(Request $request): RedirectResponse
     {
-        // TODO: Process the request after user submission
         // validate receive data
         $this->validate($request, [
             'registration_number' => 'required',
@@ -111,9 +120,14 @@ class SupportRequestController extends Controller
 
     }
 
-    public function attend_other_support (SupportRequest  $support_request): \Illuminate\Http\RedirectResponse
+    /**
+     * This open the aris and update the database to attended case
+     * @param SupportRequest $support_request
+     * @return RedirectResponse
+     */
+    public function attend_other_support (SupportRequest  $support_request): RedirectResponse
     {
-        // TODO: this open the aris and update the database to attended case
+        // prepare variables to be used
         $registration_number = $support_request->user->registration_number;
         $user_full_name = $support_request->user->name;
         $user_email = $support_request->user->email;

@@ -6,7 +6,7 @@
             <div class="col-md-8 offset-md-2 my-5">
                     <h2 class="display-6 border-bottom pb-2">User deletion confirmation</h2>
                     <p>
-                        You are about to delete a system user. Do you confirm your action?<br>
+                        You are about to delete <b>{{ $user->name }}</b>. Do you confirm your action?<br>
                         <small class="text-muted">Note: User (Account Owner) will be notified about this.</small>
                     <form action="{{ route('user.delete', $user) }}" method="POST">
                         @csrf

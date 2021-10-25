@@ -7,7 +7,7 @@
                 @if($user->is_active)
                     <h2 class="display-6 border-bottom pb-2">User deactivation confirmation</h2>
                     <p>
-                        You are about to deactivate a system user. Do you confirm your action?<br>
+                        You are about to deactivate <b>{{ $user->name }}</b>. Do you confirm your action?<br>
                         <small class="text-muted">Note: User (Account Owner) will be notified about this.</small>
                            <form action="{{ route('user.activate_deactivate', $user) }}" method="POST">
                                 @csrf

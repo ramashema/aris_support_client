@@ -10,8 +10,13 @@ use App\Models\SupportRequest;
 use App\Models\User;
 use Carbon\Carbon;
 use Dotenv\Validator;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
@@ -20,24 +25,25 @@ use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
-    private $last_login;
-
     public function __construct(){
         $this->middleware('auth')->except('index', 'login');
     }
 
-    //login page
+    /**
+     * Launch the login page
+     * @return Application|Factory|View
+     */
     public function index(){
-        //TODO: launch the login page
         return view('auth.login');
     }
 
     /**
+     * Launch the login page
+     * @param Request $request
+     * @return Application|Factory|View|RedirectResponse|Redirector
      * @throws ValidationException
      */
     public function login (Request $request) {
-        //TODO: login the user
-
         // validate the data
         $this->validate($request, [
             'email' => 'required|email',
@@ -49,6 +55,7 @@ class UserController extends Controller
             return back()->with('error', 'Invalid username or password');
         }
 
+        // check if user has been verified before, if not update verification date upon setup of initial password
         if (!auth()->user()->email_verified_at)
         {
             $user = auth()->user();
@@ -56,20 +63,21 @@ class UserController extends Controller
             $user->save();
         }
 
+        // set up initial password if is not set, if the password is set that means user is verified then send user to dashboard
         if (!auth()->user()->initial_password_isset)
         {
             return $this->create_user_password_page();
-
         } else{
             return  redirect(route('private.dashboard'));
         }
     }
 
+    /**
+     * Login out the user from the system
+     * @return Application|RedirectResponse|Redirector
+     */
     public function logout () {
-        //TODO: here is where user is logged out from the system
-
         // update last login time
-
         $user = User::find(auth()->user()->id);
         $user->last_login = Carbon::now()->toDateTimeString();
         $user->save();
@@ -80,18 +88,22 @@ class UserController extends Controller
         return redirect(route('auth.login'))->with('success', 'Successfully logged out');
     }
 
+    /**
+     * Launch user registration page
+     * @return Application|Factory|View
+     */
     public function user_registration()
     {
         return view('auth.register');
     }
 
     /**
+     * Process user registration
+     * @return Application|RedirectResponse|Redirector
      * @throws ValidationException
      */
     public function process_user_registration(Request $request){
-        //TODO: Register user of the system
-
-        # receive data and validate the data
+        // receive data and validate the data
         $this->validate($request, [
             'first_name' => ['required', 'string', 'max:255'],
             'middle_name' => ['string', 'max:255'],
@@ -100,10 +112,10 @@ class UserController extends Controller
             'privilege' => ['required', 'string']
         ]);
 
-        # create user password
+        // create user password
         $password = "MU_".strtoupper(str_shuffle($request->input('surname').$request->input('first_name')));
 
-        # register user to the database
+        // register user to the database
         $user = User::create([
             'registration_number' => md5($request->input('first_name').$request->input('middle_name').$request->input('surname')),
             'name' => strtoupper($request->input('first_name')." ".$request->input('middle_name')." ".$request->input('surname')),
@@ -113,7 +125,7 @@ class UserController extends Controller
         ]);
 
         if($user){
-            # send an email containing user registration data
+            // send an email containing user registration data
             $user_detail = [
                 'name' => $request->input('first_name')." ".$request->input('surname'),
                 'password' => $password,
@@ -133,17 +145,19 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * Reset student password
+     * @param SupportRequest $support_request
+     * @return Application|RedirectResponse|Redirector
+     */
     public function reset_student_password(SupportRequest $support_request)
     {
-        //TODO: Reset student password
         $registration_number = $support_request->user->registration_number;
         $user_full_name = $support_request->user->name;
         $user_email = $support_request->user->email;
 
         // reset the password through api request --> try and catch block can be here
-
         try{
-
             $response = Http::get('http://localhost:8001/api/password_reset/'.$registration_number)->json();
 
             // check if password reset is success
@@ -177,6 +191,10 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * Launch initial password creation page
+     * @return Application|Factory|View|RedirectResponse|Redirector
+     */
     public function create_user_password_page(){
         // load password creation page
         if(auth()->user()->initial_password_isset){
@@ -188,8 +206,13 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * Process initial password creation
+     * @param Request $request
+     * @param User $user
+     * @return Application|RedirectResponse|Redirector
+     */
     public function create_user_password(Request $request, User $user){
-        //TODO: force user to change password after initial login
         if ($user->initial_password_isset){
            return redirect(route('private.dashboard'))->with('error', 'You have already created a password, if you have forgotten your password please use reset password link on your profile!');
         } else{
@@ -197,39 +220,52 @@ class UserController extends Controller
                 'password' => 'required|string|min:8|confirmed'
             ]);
 
-            // store user after validation
+            // store user after validation and set user that is active
             $user->password = Hash::make($request->input('password'));
             $user->initial_password_isset = true;
+            $user->is_active = true;
             $user->save();
 
             return redirect(route('private.dashboard'))->with('success', 'Password created successfully!');
         }
     }
 
+    /**
+     * Get all users from the database, and paginate 10 user in every page
+     * @return Application|Factory|View
+     */
     public function all_users(){
-        // TODO: Get all users with support team privilege and show them to the page
-        $users = User::where('privilege', 'support_team')->paginate(10);
+        $users = User::paginate(10);
 
         return view('private.users', compact('users'));
     }
 
+    /**
+     * Get individual user from the database
+     * @param User $user
+     * @return Application|Factory|View
+     */
     public function show_user(User $user){
-        // TODO: Get individual user from the database
         return view('private.user', compact('user'));
     }
 
-
+    /**
+     * Open confirmation page for user to confirm if they do want to deactivate or activate use
+     * @param User $user
+     * @return Application|Factory|View
+     */
     public function activation_deactivation_confirmation(User $user){
-        //TODO: open confirmation page for user to confirm if they do want to deactivate or activate user
         return view('private.activate_deactivate_confirmation')->with('user', $user);
     }
 
-    public function activation_deactivation(User $user): \Illuminate\Http\RedirectResponse
+    /**
+     * Processing the activation or deactivation user depend on the user status
+     * @param User $user
+     * @return RedirectResponse
+     */
+    public function activation_deactivation(User $user): RedirectResponse
     {
-        //TODO: processing the activation or deactivation user depend of the user status
-
         if ($user->initial_password_isset){
-
             // check if user is active upon activate/deactivate button click
             if ($user->is_active){
                 // user is active therefore you need to deactivate
@@ -296,16 +332,25 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * Open confirmation page for user to confirm if they really want to delete system user
+     * @param User $user
+     * @return Application|Factory|View
+     */
     public function user_delete_confirmation(User $user){
-        //TODO: open confirmation page for user to confirm if they really want to delete system user
         return view('private.delete_user_confirmation')->with('user', $user);
     }
 
+    /**
+     * Delete user from the database
+     * @param User $user
+     * @return Application|RedirectResponse|Redirector
+     */
     public function delete_user(User $user){
-        //TODO: delete user from the database
         $user_email = $user->email;
         $user_name = $user->name;
 
+        // if user has been deleted the email them to let them know
         if($user->delete()){
             // send and email to user
             $email_details = [
