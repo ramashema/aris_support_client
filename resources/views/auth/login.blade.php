@@ -3,7 +3,7 @@
 @section('contents')
     <div class="container">
         <div class="row">
-            <div class="col-4 offset-4 p-5 my-5 border bg-white rounded">
+            <div class="col-4 offset-4 p-5 mt-5 border bg-white rounded">
                 <h1 class="text-center display-4 mb-4 border-bottom">Login</h1>
 
                 <form action="{{ route('auth.login') }}" method="post">
@@ -43,6 +43,9 @@
                         <button class="btn btn-success w-100" type="submit">Login</button>
                     </div>
                 </form>
+            </div>
+            <div class="text-center mt-3 text-muted">
+                ZamoTechnologies &copy;{{ \Carbon\Carbon::now()->year }}
             </div>
         </div>
     </div>

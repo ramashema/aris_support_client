@@ -33,7 +33,7 @@ class SupportRequestController extends Controller
      * @return Application|Factory|View|RedirectResponse
      * @throws ValidationException
      */
-    public function process_request(Request $request): RedirectResponse
+    public function process_request(Request $request)
     {
         // validate receive data
         $this->validate($request, [
