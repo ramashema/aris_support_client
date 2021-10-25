@@ -18,7 +18,6 @@ use Illuminate\Validation\ValidationException;
 
 class SupportRequestController extends Controller
 {
-
     /**
      * Launch the request page for user to fill the form
      * @return Application|Factory|View

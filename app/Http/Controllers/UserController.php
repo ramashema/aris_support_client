@@ -9,7 +9,6 @@ use App\Mail\UserDeletionNotification;
 use App\Models\SupportRequest;
 use App\Models\User;
 use Carbon\Carbon;
-use Dotenv\Validator;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -58,18 +57,22 @@ class UserController extends Controller
         // check if user has been verified before, if not update verification date upon setup of initial password
         if (!auth()->user()->email_verified_at)
         {
-            $user = auth()->user();
-            $user->email_verified_at = Carbon::now();
-            $user->save();
+            auth()->user()->email_verified_at = Carbon::now();
+            auth()->user()->save();
         }
 
         // set up initial password if is not set, if the password is set that means user is verified then send user to dashboard
         if (!auth()->user()->initial_password_isset)
         {
             return $this->create_user_password_page();
-        } else{
-            return  redirect(route('private.dashboard'));
         }
+
+        // update last login
+        auth()->user()->last_login = Carbon::now()->toDateTimeString();
+        auth()->user()->save();
+
+        return  redirect(route('private.dashboard'));
+
     }
 
     /**
@@ -224,6 +227,7 @@ class UserController extends Controller
             $user->password = Hash::make($request->input('password'));
             $user->initial_password_isset = true;
             $user->is_active = true;
+            $user->last_login = Carbon::now()->toDateTimeString();
             $user->save();
 
             return redirect(route('private.dashboard'))->with('success', 'Password created successfully!');
@@ -367,5 +371,15 @@ class UserController extends Controller
         } else{
             return redirect()->back()->with('error', 'Failed to delete user');
         }
+    }
+
+    /**
+     * @param $user
+     */
+    private function update_last_login($user){
+        // update last login
+        $user = auth()->user();
+        $user->last_login = Carbon::now()->toDateTimeString();
+        $user->save();
     }
 }
