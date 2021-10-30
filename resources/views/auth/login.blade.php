@@ -42,6 +42,10 @@
                     <div class="form-group my-3">
                         <button class="btn btn-success w-100" type="submit">Login</button>
                     </div>
+
+                    <div>
+                        <a href="{{ route('user.password_reset') }}" style="text-decoration: none">Forgot your password?</a>
+                    </div>
                 </form>
             </div>
             <div class="text-center mt-3 text-muted">

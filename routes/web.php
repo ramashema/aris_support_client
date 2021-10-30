@@ -83,3 +83,6 @@ Route::get('private/user/{user}/delete', [UserController::class, 'user_delete_co
 Route::post('private/user/{user}/delete', [UserController::class, 'delete_user'])->name('user.delete');
 
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('public/user/request_password_reset', [UserController::class, 'reset_password_page'])->name('user.password_reset');
+Route::post('public/user/request_password_reset', [UserController::class, 'process_password_reset_request'])->name('user.process_password_reset_request');

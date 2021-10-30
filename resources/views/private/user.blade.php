@@ -40,7 +40,7 @@
 {{--                        </th>--}}
 {{--                    </tr>--}}
                     <tr>
-                        <th class="bg-dark text-light">Email Address</th>
+                        <th class="bg-dark text-light" style="width: 30%">Email Address</th>
                         <td>{{ $user->email }}</td>
                     </tr>
 

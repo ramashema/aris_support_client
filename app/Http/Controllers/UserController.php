@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\AccountActivationMail;
+use App\Mail\AccountPasswordReset;
 use App\Mail\ActivationDeactivationMail;
 use App\Mail\SupportMail;
 use App\Mail\UserDeletionNotification;
@@ -25,7 +26,7 @@ use Illuminate\Validation\ValidationException;
 class UserController extends Controller
 {
     public function __construct(){
-        $this->middleware('auth')->except('index', 'login');
+        $this->middleware('auth')->except('index', 'login', 'reset_password_page', 'process_password_reset_request');
     }
 
     /**
@@ -62,7 +63,7 @@ class UserController extends Controller
         }
 
         // set up initial password if is not set, if the password is set that means user is verified then send user to dashboard
-        if (!auth()->user()->initial_password_isset)
+        if (!auth()->user()->initial_password_isset || auth()->user()->has_password_request)
         {
             return $this->create_user_password_page();
         }
@@ -199,13 +200,19 @@ class UserController extends Controller
      * @return Application|Factory|View|RedirectResponse|Redirector
      */
     public function create_user_password_page(){
-        // load password creation page
-        if(auth()->user()->initial_password_isset){
-            $error = 'You have already created a password, if you have forgotten your password please use reset password link on your profile!';
-            return redirect(route('private.dashboard'))->with('error', $error);
-        } else{
-            $success = 'You have successfully verified your account, please create your password to proceed!';
+        //check if the request is for password reset
+        if(auth()->user()->has_password_request){
+            $success = 'Please create new password to proceed!';
             return view('auth.create_user_password')->with('success', $success);
+        } else{
+            // load password creation page
+            if(auth()->user()->initial_password_isset){
+                $error = 'You have already created a password, if you have forgotten your password please use reset password link on your profile!';
+                return redirect(route('private.dashboard'))->with('error', $error);
+            } else{
+                $success = 'You have successfully verified your account, please create your password to proceed!';
+                return view('auth.create_user_password')->with('success', $success);
+            }
         }
     }
 
@@ -226,6 +233,7 @@ class UserController extends Controller
             // store user after validation and set user that is active
             $user->password = Hash::make($request->input('password'));
             $user->initial_password_isset = true;
+            $user->has_password_request = false;
             $user->is_active = true;
             $user->last_login = Carbon::now()->toDateTimeString();
             $user->save();
@@ -239,7 +247,7 @@ class UserController extends Controller
      * @return Application|Factory|View
      */
     public function all_users(){
-        $users = User::paginate(10);
+        $users = User::where('privilege', 'admin')->orWhere('privilege', 'support_team')->paginate(10);
 
         return view('private.users', compact('users'));
     }
@@ -381,5 +389,56 @@ class UserController extends Controller
         $user = auth()->user();
         $user->last_login = Carbon::now()->toDateTimeString();
         $user->save();
+    }
+
+    /**
+     * Launch the page where they can provide email for password reset functionality
+     * @return Application|Factory|View
+     */
+    public function reset_password_page () {
+        $success = "You must provide the email used during account creation.";
+        return view('auth.passwords.reset')->with('success', $success);
+    }
+
+    /**
+     * Process password reset
+     * @param Request $request
+     * @return Application|Redirector|RedirectResponse
+     * @throws ValidationException
+     */
+
+    public function process_password_reset_request (Request $request) {
+        // validate the inputs
+        $this->validate($request, [
+            'email' => 'required|email'
+        ]);
+
+        // check if user email exist in the database
+        $user = User::where('email', $request->input('email'))->first();
+
+        if ($user){
+            // put together important variable
+            $password = str_shuffle('M_'.$user->email.'_U');
+            $user->password = Hash::make($password);
+            $user->has_password_request = true;
+            $user->initial_password_isset = false;
+             $user->password_reset_at = Carbon::now();
+            $user->save();
+
+            // prepare email contents
+            $details = [
+                'name' => $user->name,
+                'password' => $password
+            ];
+
+            // try to send temporary password to the user email
+            try {
+                Mail::to($user->email)->send(new AccountPasswordReset($details));
+            } catch (Exception $exception){
+                return redirect()->back()->with('error', 'Failed to sent password reset info, please contact system administrator.');
+            }
+        }
+        // return user to the login page
+        return redirect(route('auth.login'))->with('success', 'If provided the correct email, password reset instructions will be sent to your email inbox.');
     }
 }

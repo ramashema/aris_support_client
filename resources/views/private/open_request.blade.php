@@ -26,7 +26,7 @@
 
                 <table class="table table-bordered">
                     <tr>
-                        <th class="bg-dark text-white">Student Name</th>
+                        <th class="bg-dark text-white" style="width: 30%">Student Name</th>
                         <td>{{ $support_request->user->name }}</td>
                     </tr>
 
