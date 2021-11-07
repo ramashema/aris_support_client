@@ -3,7 +3,7 @@
 @section('contents')
     <div class="container">
         <div class="row">
-            <div class="col-8 offset-2">
+            <div class="col-md-8 offset-md-2">
                 <p class="display-4 my-3 pb-3 border-bottom">Dashboard</p>
 
                 {{--    The messages sections  --}}
@@ -36,7 +36,7 @@
         </div>
 
         <div class="row">
-            <div class="col-8 offset-2">
+            <div class="col-md-8 offset-md-2">
                 @if(count($support_requests) == 0)
                     {{--  Checking if the there is no unattended requests    --}}
                     <p class="text-muted text-center">-- No un-attended requests , please come back later --</p>
@@ -44,7 +44,8 @@
                         <p class="text-muted">
                             Showing {{($support_requests->currentPage()-1)* $support_requests->perPage()+($support_requests->total() ? 1:0)}} to {{($support_requests->currentPage()-1)*$support_requests->perPage()+count($support_requests)}}  of  {{$support_requests->total()}}  Results
                         </p>
-                        <table class="table table-striped table-bordered  shadow">
+                        <table class="table table-responsive table-striped table-bordered shadow">
+                            <caption>List of attended support requests</caption>
                             <tr class="bg-dark text-white">
                                 <th class="text-center">#</th>
                                 <th>Student Name</th>

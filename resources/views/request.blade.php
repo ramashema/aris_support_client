@@ -3,7 +3,7 @@
 @section('contents')
     <div class="container">
         <div class="row">
-            <div class="col-4 offset-4 p-5 my-5 border bg-white rounded">
+            <div class="col-md-4 offset-md-4 p-5 my-5 border bg-white rounded">
                 <h1 class="text-center display-4 mb-4 border-bottom">Fill in the form</h1>
 
                 {{--    The messages sections  --}}
