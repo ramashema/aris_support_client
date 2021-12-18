@@ -50,8 +50,10 @@
 
                 </table>
 
+
                 @if ($support_request->descriptions == 'Password Reset')
-                    <form action="{{ route('user.password_reset', [$support_request]) }}" method="post">
+
+                    <form action="{{ route('student.password_reset', [$support_request]) }}" method="post">
                         @csrf
                         <button type="submit" class="btn float-end btn-sm btn-success">Reset password</button>
                     </form>

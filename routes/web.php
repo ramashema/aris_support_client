@@ -52,7 +52,7 @@ Route::get('private/dashboard/attended', [DashboardController::class, 'attended'
 Route::get('private/dashboard/open_request/{support_request}', [DashboardController::class, 'open_request'])->name('private.open_request');
 
 // reset user/student password
-Route::post('auth/user/{support_request}/password_reset', [UserController::class, 'reset_student_password'])->name('user.password_reset');
+Route::post('auth/user/{support_request}/password_reset', [UserController::class, 'reset_student_password'])->name('student.password_reset');
 
 // open aris
 Route::post('support_request/{support_request}/open_aris/', [SupportRequestController::class, 'attend_other_support'])->name('attend_other_support');
